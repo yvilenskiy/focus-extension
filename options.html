@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Focus Gate Options</title>
+    <link rel="stylesheet" href="src/options.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div>
+          <p class="eyebrow">Focus Gate</p>
+          <h1>Configured websites</h1>
+        </div>
+        <button id="reset" class="secondary-button" type="button">Reset defaults</button>
+      </header>
+
+      <section id="sites" class="sites" aria-live="polite"></section>
+
+      <section class="form-section">
+        <h2>Add a website</h2>
+        <form id="add-site" class="form">
+          <label>
+            Label
+            <input id="label" name="label" placeholder="Product Hunt">
+          </label>
+          <label>
+            Website URL
+            <input id="site-url" name="site-url" required placeholder="https://example.com">
+          </label>
+          <label>
+            Default work URL
+            <input id="default-url" name="default-url" required placeholder="https://example.com/work">
+          </label>
+          <button class="primary-button" type="submit">Add website</button>
+        </form>
+        <p id="message" class="message" role="status"></p>
+      </section>
+    </main>
+
+    <script src="src/config.js"></script>
+    <script src="src/options.js"></script>
+  </body>
+</html>
