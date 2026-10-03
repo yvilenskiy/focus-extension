@@ -18,12 +18,12 @@ It works for:
 
 Extension hides:
 
-- Navigation items such as Home, Jobs, Notifications, Learning, Premium, For Business, and Hire with AI, will be hidden.
-- Ad banners and the footer.
-- Suggested people, pages, posts and other recommendations.
-- **Highlights** widgets on profiles.
-- “Are these results helpful?” feedback card.
-- “There was a problem processing your job posting payment” banner.
+- Navigation items such as Home, Jobs, Notifications, Learning, Premium, For Business, and Hire with A
+- Ad banners and the footer
+- Suggested people, pages, posts and other recommendations
+- **Highlights** widgets on profiles
+- “Are these results helpful?” feedback card
+- “There was a problem processing your job posting payment” banner
 
 Extension adds redirects:
 
