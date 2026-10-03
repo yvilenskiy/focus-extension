@@ -1,6 +1,5 @@
 (() => {
   const CONFIG_KEY = "focusGateConfig";
-  const SESSION_ALLOW_KEY = "focusGateAllowedTabs";
 
   const DEFAULT_SITES = [
     {
@@ -39,6 +38,15 @@
       defaultUrl: "https://www.instagram.com/direct/inbox/",
       homePaths: ["/"],
       siteRules: ["instagram"]
+    },
+    {
+      id: "vk",
+      label: "VK",
+      enabled: true,
+      matchHosts: ["vk.ru"],
+      defaultUrl: "https://vk.ru/im",
+      homePaths: ["/", "/feed"],
+      siteRules: ["vk"]
     }
   ];
 
@@ -91,7 +99,11 @@
           return normalizeSite({
             ...defaultSite,
             ...site,
-            excludedHosts: site.excludedHosts ?? defaultSite.excludedHosts
+            excludedHosts: site.excludedHosts ?? defaultSite.excludedHosts,
+            // Earlier VK configs shipped with redirect-only rules.
+            siteRules: defaultSite.id === "vk" && site.siteRules?.length === 0
+              ? defaultSite.siteRules
+              : site.siteRules ?? defaultSite.siteRules
           });
         })
       : [];
@@ -161,6 +173,55 @@
     }
   };
 
+  // These sites use single-segment paths for both profiles and app routes.
+  const X_ROUTES = new Set([
+    "about", "account", "accounts", "articles", "bookmarks", "chat", "communities",
+    "compose", "connect_people",
+    "download", "explore", "grok", "help", "home", "i", "intent", "jobs", "lists", "login",
+    "logout", "messages", "notifications", "oauth", "premium", "privacy", "search",
+    "settings", "share", "signup", "tos", "topics", "welcome", "who_to_follow"
+  ]);
+  const INSTAGRAM_ROUTES = new Set([
+    "about", "accounts", "ads", "api", "challenge", "create", "developer",
+    "developers", "direct", "directory", "emails", "explore", "legal",
+    "oauth", "p", "press", "privacy", "push", "reel", "reels", "session",
+    "settings", "static", "stories", "terms", "tv", "web", "your_activity"
+  ]);
+
+  const isProfileUrl = (rawUrl, site) => {
+    try {
+      const url = new URL(rawUrl);
+      if (
+        !["https:", "http:"].includes(url.protocol) ||
+        !hostMatches(site, url)
+      ) {
+        return false;
+      }
+
+      const host = normalizeHost(url.hostname);
+      const path = normalizePath(url.pathname);
+      const onHost = (domain) => host === domain || host.endsWith(`.${domain}`);
+
+      if (onHost("linkedin.com")) {
+        return /^\/in\/[^/]+$/.test(path);
+      }
+      if (onHost("x.com") || onHost("twitter.com")) {
+        return /^\/[a-zA-Z0-9_]{1,15}$/.test(path) &&
+          !X_ROUTES.has(path.slice(1).toLowerCase());
+      }
+      if (onHost("instagram.com")) {
+        return /^\/[a-zA-Z0-9_.]{1,30}$/.test(path) &&
+          !INSTAGRAM_ROUTES.has(path.slice(1).toLowerCase());
+      }
+      if (onHost("youtube.com")) {
+        return /^\/(?:@[^/]+|channel\/UC[a-zA-Z0-9_-]{22}|(?:c|user)\/[^/]+)$/.test(path);
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
   const createSite = (label, siteUrl, defaultUrl) => {
     const source = normalizeUrl(siteUrl);
     const target = normalizeUrl(defaultUrl);
@@ -186,10 +247,10 @@
 
   self.FocusGate = {
     CONFIG_KEY,
-    SESSION_ALLOW_KEY,
     DEFAULT_SITES: clone(DEFAULT_SITES),
     createSite,
     isHomeUrl,
+    isProfileUrl,
     loadConfig,
     matchSite,
     normalizeHost,

@@ -1,46 +1,66 @@
 # Focus Gate
 
-Focus Gate is a Chrome Manifest V3 extension for deliberate entry into distracting websites.
+I am easily distracted by social media.
 
-When you open a configured website, the page is blocked by a full-screen prompt:
+I would cut myself off from it completely, but… I can’t. Every once in a while, I need to check someone’s LinkedIn profile or post on X.
 
-- **I want to waste time** closes the current tab.
-- **Continue for work** appears as a small link in a random place on the screen. Clicking it unlocks that tab and opens the configured default page.
+I built this browser extension for my very specific, opinionated workflow: I want access to certain parts of social media websites without being exposed to distracting or attention-sucking parts.
 
-The extension ships with defaults for:
+It works for:
 
-- X: opens `https://x.com/messages` and hides distracting navigation items.
-- LinkedIn: opens `https://www.linkedin.com/search/results/people/`, hides selected navigation and sidebar surfaces, and rewrites `/mynetwork/grow/` links to `https://www.linkedin.com/mynetwork/invite-connect/connections/`.
-- YouTube: opens `https://www.youtube.com/feed/subscriptions` and hides the feed/sidebar surfaces so the top navbar stays available. `music.youtube.com` is excluded.
-- Instagram: opens `https://www.instagram.com/direct/inbox/` and hides distracting navigation and feed surfaces.
+- LinkedIn
+- YouTube
+- X / Twitter
+- Instagram
+- VK
 
-## Install locally
+## LinkedIn
 
-1. Open `chrome://extensions`.
-2. Enable **Developer mode**.
-3. Click **Load unpacked**.
-4. Select this project folder.
+Extension hides:
 
-## Configure websites
+- Navigation items such as Home, Jobs, Notifications, Learning, Premium, For Business, and Hire with AI, will be hidden.
+- Ad banners and the footer.
+- Suggested people, pages, posts and other recommendations.
+- **Highlights** widgets on profiles.
+- “Are these results helpful?” feedback card.
+- “There was a problem processing your job posting payment” banner.
 
-Open the extension options page from `chrome://extensions` or the extension popup.
+Extension adds redirects:
 
-Each configured website has:
+- Instead of LinkedIn’s home page or feed it will always redirect you to people search
+- Instead of network page it will open existing connections page
 
-- A website URL or host to match.
-- A default URL to open after the work link is clicked.
-- Optional built-in cleanup rules for X, LinkedIn, YouTube, and Instagram.
+## YouTube
 
-Custom websites use the same gate behavior without site-specific cleanup rules.
+Extension hides:
 
-## GitHub
+- Video and shorts feed
+- Video recommendations
+- Comments
+- Sidebar navigation
+- Topic and category chips
 
-This folder is ready to become its own GitHub repository. Initialize it with:
+## X / Twitter
 
-```bash
-git init
-git add .
-git commit -m "Initial Focus Gate extension"
-```
+tbd
 
-Then create a GitHub repository and add it as `origin`.
+## Instagram
+
+Redirects:
+
+- Instead of Instagram’s home page, it opens your direct-message inbox
+
+Extension hides:
+
+- Tabs: Home, Reels, Notifications, Also from Meta, Instagram logo
+- Notes above messages
+
+## VK
+
+Redirects:
+
+- Instead of VK’s home page or feed, it opens Messenger
+
+Extension hides:
+
+- All sidebar tabs except Profile, Messenger, Friends, and Communities
