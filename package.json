@@ -2,9 +2,9 @@
   "name": "focus-gate-extension",
   "version": "0.1.0",
   "private": true,
-  "description": "A Chrome extension that adds a deliberate focus gate to distracting websites.",
+  "description": "A Chrome extension that hides distractions and keeps useful pages accessible.",
   "scripts": {
-    "check": "node --check src/config.js && node --check src/background.js && node --check src/focus-gate.js && node --check src/site-rules.js && node --check src/options.js && node --check src/popup.js"
+    "check": "node --check src/config.js && node --check src/background.js && node --check src/navigation.js && node --check src/site-rules.js && node --check src/options.js && node --check src/popup.js"
   },
   "license": "UNLICENSED"
 }
