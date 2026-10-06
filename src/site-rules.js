@@ -70,37 +70,6 @@
     });
   };
 
-  const hideXTimelineContent = () => {
-    if (isProfilePage) {
-      return;
-    }
-
-    hideBySelector([
-      "[data-testid='primaryColumn'] div[aria-label='Timeline: Explore']",
-      "[data-testid='primaryColumn'] div[aria-label='Timeline: Explore'] > div",
-      "[data-testid='primaryColumn'] div[aria-label='Timeline: Search timeline']",
-      "[data-testid='primaryColumn'] div[aria-label='Timeline: Search timeline'] > div",
-      "[data-testid='primaryColumn'] div[aria-label='Home timeline'] > div:nth-child(n+3)"
-    ]);
-
-    document
-      .querySelectorAll(
-        "[data-testid='primaryColumn'] div[aria-label='Timeline: Explore'], [data-testid='primaryColumn'] div[aria-label='Timeline: Search timeline']"
-      )
-      .forEach((timeline) => {
-        hideElement(timeline);
-        hideElement(timeline.closest("section[role='region']"));
-      });
-
-    document
-      .querySelectorAll("[data-testid='primaryColumn'] div[aria-label='Home timeline']")
-      .forEach((timeline) => {
-        Array.from(timeline.children)
-          .slice(2)
-          .forEach(hideElement);
-      });
-  };
-
   let isProfilePage = false;
 
   const cleanX = () => {
@@ -121,10 +90,19 @@
       "More"
     ]);
 
+    const isFeedPage = /^\/(?:$|(?:home|explore|search)(?:\/|$))/.test(window.location.pathname);
+    if (!isFeedPage) {
+      removeStyle("focus-gate-x-discovery-cleanup");
+      return;
+    }
+
+    const isDiscoveryPage = /^\/(?:explore|search)(?:\/|$)/.test(window.location.pathname);
+    // Keep timeline hiding in a removable stylesheet so SPA navigation restores content.
     upsertStyle(
       "focus-gate-x-discovery-cleanup",
-      isProfilePage ? "" : `
+      `
         [data-testid='primaryColumn'] section[role='region'][aria-labelledby^='accessible-list-'],
+        [data-testid='primaryColumn'] section[role='region']:has(div[aria-label='Timeline: Explore'], div[aria-label='Timeline: Search timeline']),
         [data-testid='primaryColumn'] div[aria-label='Timeline: Explore'],
         [data-testid='primaryColumn'] div[aria-label='Timeline: Explore'] > div,
         [data-testid='primaryColumn'] div[aria-label='Timeline: Search timeline'],
@@ -136,27 +114,9 @@
           overflow: hidden !important;
           visibility: hidden !important;
         }
+        ${isDiscoveryPage ? "[aria-label^='Timeline:'] { display: none !important; }" : ""}
       `
     );
-    hideXTimelineContent();
-
-    if (
-      window.location.pathname.startsWith("/explore") ||
-      window.location.pathname.startsWith("/search")
-    ) {
-      hideBySelector([
-        "[data-testid='primaryColumn'] section[role='region'][aria-labelledby^='accessible-list-']",
-        "[data-testid='primaryColumn'] div[aria-label='Timeline: Explore']",
-        "[data-testid='primaryColumn'] div[aria-label='Timeline: Explore'] > div",
-        "[data-testid='primaryColumn'] div[aria-label='Timeline: Search timeline']",
-        "[data-testid='primaryColumn'] div[aria-label='Timeline: Search timeline'] > div",
-        "[data-testid='primaryColumn'] div[aria-label='Home timeline'] > div:nth-child(n+3)",
-        "[aria-label='Timeline: Explore']",
-        "[aria-label='Timeline: Search timeline']",
-        "[aria-label^='Timeline:']"
-      ]);
-      hideXTimelineContent();
-    }
   };
 
   const hideLinkedInRightColumn = () => {
