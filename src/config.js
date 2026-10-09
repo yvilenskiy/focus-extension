@@ -203,7 +203,8 @@
       const onHost = (domain) => host === domain || host.endsWith(`.${domain}`);
 
       if (onHost("linkedin.com")) {
-        return /^\/in\/[^/]+$/.test(path);
+        // Keep every activity tab accessible as part of the person’s profile.
+        return /^\/in\/[^/]+(?:\/recent-activity(?:\/[^/]+)?)?$/.test(path);
       }
       if (onHost("x.com") || onHost("twitter.com")) {
         return /^\/[a-zA-Z0-9_]{1,15}$/.test(path) &&

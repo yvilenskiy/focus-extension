@@ -121,11 +121,14 @@
 
   const hideLinkedInRightColumn = () => {
     const isSearchPage = /^\/search(?:\/|$)/.test(window.location.pathname);
+    const isActivityPage = /^\/in\/[^/]+\/recent-activity(?:\/|$)/.test(window.location.pathname);
     const hideSideColumn = isProfilePage || isSearchPage;
+    // Activity also has a left profile aside. Hide its right column by class
+    // or position instead of hiding every semantic aside.
     upsertStyle(
       "focus-gate-linkedin-right-column",
       `.scaffold-layout__aside { display: none !important; }
-       ${hideSideColumn ? "main aside, main [role='complementary'], [role='main'] aside, [role='main'] [role='complementary'] { display: none !important; }" : ""}`
+       ${hideSideColumn && !isActivityPage ? "main aside, main [role='complementary'], [role='main'] aside, [role='main'] [role='complementary'] { display: none !important; }" : ""}`
     );
 
     if (!hideSideColumn) {
@@ -163,8 +166,16 @@
 
     // New layouts can use plain divs for columns. Find siblings to the right
     // of the profile column, including placeholders that have no headings yet.
-    const heading = document.querySelector("main h1, [role='main'] h1");
-    let column = (isSearchPage && document.querySelector(".search-results-container")) ||
+    // Activity uses an h2 and may put all three columns inside main.
+    // Starting at main would miss the right column inside that wrapper.
+    const heading = document.querySelector(isActivityPage
+      ? "main h2, [role='main'] h2"
+      : "main h1, [role='main'] h1");
+    const activityColumn = isActivityPage && (
+      document.querySelector(".scaffold-layout__main") ||
+      heading?.closest("section, .artdeco-card") || heading?.parentElement
+    );
+    let column = activityColumn || (isSearchPage && document.querySelector(".search-results-container")) ||
       heading?.closest("section, .artdeco-card") ||
       heading?.closest("main, [role='main']") ||
       document.querySelector("main, [role='main']");
