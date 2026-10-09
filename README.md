@@ -21,9 +21,12 @@ Extension hides:
 - Navigation items such as Home, Jobs, Notifications, Learning, Premium, For Business, and Hire with A
 - Ad banners and the footer
 - Suggested people, pages, posts and other recommendations
+- Right column on profiles and all profile activity tabs
 - **Highlights** widgets on profiles
 - “Are these results helpful?” feedback card
 - “There was a problem processing your job posting payment” banner
+
+Profile activity (posts, comments, videos, images, and reactions) remains accessible.
 
 Extension adds redirects:
 
